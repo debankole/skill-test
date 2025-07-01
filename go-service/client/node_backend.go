@@ -33,13 +33,26 @@ type Student struct {
 	ReporterName       *string `json:"reporterName"`
 }
 
-func FetchStudent(ctx context.Context, id string) (*Student, error) {
+type StudentClient interface {
+	FetchStudent(ctx context.Context, id string) (*Student, error)
+}
+
+type NodeBackendClient struct {
+	backendURL string
+}
+
+func NewNodeBackendClient() *NodeBackendClient {
 	backendURL := os.Getenv("NODE_BACKEND_URL")
 	if backendURL == "" {
-		backendURL = "http://localhost:3000"
+		panic("NODE_BACKEND_URL is not set")
 	}
-	url := fmt.Sprintf("%s/api/v1/students/%s", backendURL, id)
+	return &NodeBackendClient{
+		backendURL: backendURL,
+	}
+}
 
+func (c *NodeBackendClient) FetchStudent(ctx context.Context, id string) (*Student, error) {
+	url := fmt.Sprintf("%s/api/v1/students/%s", c.backendURL, id)
 	req, _ := http.NewRequestWithContext(ctx, "GET", url, nil)
 	client := &http.Client{Timeout: 10 * time.Second}
 	resp, err := client.Do(req)

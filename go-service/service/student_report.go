@@ -6,8 +6,18 @@ import (
 	"report-service/pdf"
 )
 
-func GenerateStudentReportByID(ctx context.Context, id string) ([]byte, error) {
-	student, err := client.FetchStudent(ctx, id)
+type StudentReportService struct {
+	studentClient client.StudentClient
+}
+
+func NewStudentReportService(studentClient client.StudentClient) *StudentReportService {
+	return &StudentReportService{
+		studentClient: studentClient,
+	}
+}
+
+func (s *StudentReportService) GenerateStudentReportByID(ctx context.Context, id string) ([]byte, error) {
+	student, err := s.studentClient.FetchStudent(ctx, id)
 	if err != nil {
 		return nil, err
 	}

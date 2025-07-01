@@ -9,8 +9,8 @@ import (
 	"github.com/joho/godotenv"
 	log "github.com/sirupsen/logrus"
 
+	"report-service/client"
 	"report-service/handler"
-	mw "report-service/middleware"
 )
 
 func main() {
@@ -22,10 +22,17 @@ func main() {
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
-	r.Use(mw.AuthMiddleware)
-	r.Use(mw.LoggingMiddleware)
+	// r.Use(mw.AuthMiddleware)
+	// r.Use(mw.LoggingMiddleware)
 
-	r.Get("/api/v1/students/{id}/report", handler.StudentReportHandler)
+	useMock := os.Getenv("USE_MOCK")
+	log.Infof("USE_MOCK: %s", useMock)
+	var studentClient client.StudentClient = client.NewNodeBackendClient()
+	if useMock == "true" {
+		studentClient = client.NewMockStudentClientWithExampleData()
+	}
+
+	r.Get("/api/v1/students/{id}/report", handler.NewStudentReportHandler(studentClient).StudentReportHandler)
 
 	port := os.Getenv("PORT")
 	if port == "" {
