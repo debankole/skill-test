@@ -1,5 +1,35 @@
 # Go PDF Report Microservice
 
+> **Note:** The Node.js service does not provide the actual student retrieval endpoint, so for the purposes of this microservice, the following JSON structure was assumed for the student response:
+>
+> ```json
+> {
+>   "id": 1,
+>   "name": "John Doe",
+>   "email": "john.doe@example.com",
+>   "systemAccess": true,
+>   "phone": "123-456-7890",
+>   "gender": "Male",
+>   "dob": "2005-09-15",
+>   "class": "10",
+>   "section": "A",
+>   "roll": "23",
+>   "fatherName": "Richard Doe",
+>   "fatherPhone": "111-222-3333",
+>   "motherName": "Jane Doe",
+>   "motherPhone": "444-555-6666",
+>   "guardianName": "Uncle Bob",
+>   "guardianPhone": "777-888-9999",
+>   "relationOfGuardian": "Uncle",
+>   "currentAddress": "123 Main St, Springfield",
+>   "permanentAddress": "456 Elm St, Springfield",
+>   "admissionDate": "2020-06-01",
+>   "reporterName": "Admin User"
+> }
+> ```
+
+## Overview
+
 This microservice generates PDF reports for students by consuming data from an existing Node.js backend API. It is designed as a standalone service and exposes a REST API endpoint to generate and download student reports as PDFs.
 
 ## General Approach
